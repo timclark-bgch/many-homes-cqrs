@@ -86,6 +86,31 @@ final class ConverterTest {
 	}
 
 	@Test
+	void closedAsBytes() throws InvalidProtocolBufferException {
+		final String reason = "reason";
+		final String id = "test-id";
+		final byte[] bytes = ConverterKt.asBytes(new Closed(reason), id);
+
+		assertThat(bytes).isNotNull();
+
+		final Home.Closed closed = Home.Closed.parseFrom(bytes);
+		assertThat(closed).hasFieldOrPropertyWithValue("home", id);
+		assertThat(closed).hasFieldOrPropertyWithValue("reason", reason);
+	}
+
+	@Test
+	void closedFromBytes() {
+		final String reason = "reason";
+		final byte[] bytes = Home.Closed.newBuilder().setHome("test-id").setReason(reason).build().toByteArray();
+
+		final Event event = ConverterKt.fromBytes(bytes, Home.Closed.getDescriptor().getFullName());
+
+		assertThat(event).isNotNull();
+		assertThat(event).isInstanceOf(Closed.class);
+		assertThat(event).hasFieldOrPropertyWithValue("reason", reason);
+	}
+
+	@Test
 	void badDataFails() {
 		final Event event = ConverterKt.fromBytes("bad-bytes".getBytes(), Home.Created.getDescriptor().getFullName());
 

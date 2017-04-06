@@ -63,11 +63,29 @@ private val suspended = object : Converter<Suspended> {
 			.toByteArray()
 }
 
+private val closed = object : Converter<Closed> {
+	override fun read(bytes: ByteArray): Closed? =
+		try {
+			Closed(Home.Closed.parseFrom(bytes).reason)
+		}
+		catch (e: InvalidProtocolBufferException) {
+			null
+		}
+
+	override fun write(event: Closed, id: String): ByteArray? =
+		Home.Closed.newBuilder()
+			.setHome(id)
+			.setReason(event.reason)
+			.build()
+			.toByteArray()
+}
+
 fun asBytes(event: Event, id: String): ByteArray? =
 	when (event) {
 		is Created -> created.write(event, id)
 		is Migrated -> migrated.write(event, id)
 		is Suspended -> suspended.write(event, id)
+		is Closed -> closed.write(event, id)
 		else -> null
 	}
 
@@ -76,6 +94,7 @@ fun fromBytes(bytes: ByteArray, proto: String): Event? =
 		Home.Created.getDescriptor().fullName -> created.read(bytes)
 		Home.Migrated.getDescriptor().fullName -> migrated.read(bytes)
 		Home.Suspended.getDescriptor().fullName -> suspended.read(bytes)
+		Home.Closed.getDescriptor().fullName -> closed.read(bytes)
 		else -> null
 	}
 
