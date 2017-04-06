@@ -1,10 +1,7 @@
 package connectedhome.honeycomb.home.storage;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import connectedhome.honeycomb.home.domain.Created;
-import connectedhome.honeycomb.home.domain.Event;
-import connectedhome.honeycomb.home.domain.Migrated;
-import connectedhome.honeycomb.home.domain.Owner;
+import connectedhome.honeycomb.home.domain.*;
 import honeycomb.home.events.Home;
 import org.junit.jupiter.api.Test;
 
@@ -61,6 +58,31 @@ final class ConverterTest {
 		assertThat(event).isNotNull();
 		assertThat(event).isInstanceOf(Migrated.class);
 		assertThat(event).hasFieldOrPropertyWithValue("owner", new Owner(owner));
+	}
+
+	@Test
+	void suspendedAsBytes() throws InvalidProtocolBufferException {
+		final String reason = "reason";
+		final String id = "test-id";
+		final byte[] bytes = ConverterKt.asBytes(new Suspended(reason), id);
+
+		assertThat(bytes).isNotNull();
+
+		final Home.Suspended suspended = Home.Suspended.parseFrom(bytes);
+		assertThat(suspended).hasFieldOrPropertyWithValue("home", id);
+		assertThat(suspended).hasFieldOrPropertyWithValue("reason", reason);
+	}
+
+	@Test
+	void suspendedFromBytes() {
+		final String reason = "reason";
+		final byte[] bytes = Home.Suspended.newBuilder().setHome("test-id").setReason(reason).build().toByteArray();
+
+		final Event event = ConverterKt.fromBytes(bytes, Home.Suspended.getDescriptor().getFullName());
+
+		assertThat(event).isNotNull();
+		assertThat(event).isInstanceOf(Suspended.class);
+		assertThat(event).hasFieldOrPropertyWithValue("reason", reason);
 	}
 
 	@Test

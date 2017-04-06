@@ -1,10 +1,7 @@
 package connectedhome.honeycomb.home.storage
 
 import com.google.protobuf.InvalidProtocolBufferException
-import connectedhome.honeycomb.home.domain.Created
-import connectedhome.honeycomb.home.domain.Event
-import connectedhome.honeycomb.home.domain.Migrated
-import connectedhome.honeycomb.home.domain.Owner
+import connectedhome.honeycomb.home.domain.*
 import honeycomb.home.events.Home
 
 private interface Converter<T> {
@@ -49,18 +46,36 @@ private val migrated = object : Converter<Migrated> {
 			.toByteArray()
 }
 
+private val suspended = object : Converter<Suspended> {
+	override fun read(bytes: ByteArray): Suspended? =
+		try {
+			Suspended(Home.Suspended.parseFrom(bytes).reason)
+		}
+		catch (e: InvalidProtocolBufferException) {
+			null
+		}
+
+	override fun write(event: Suspended, id: String): ByteArray? =
+		Home.Suspended.newBuilder()
+			.setHome(id)
+			.setReason(event.reason)
+			.build()
+			.toByteArray()
+}
+
 fun asBytes(event: Event, id: String): ByteArray? =
 	when (event) {
 		is Created -> created.write(event, id)
 		is Migrated -> migrated.write(event, id)
+		is Suspended -> suspended.write(event, id)
 		else -> null
 	}
-
 
 fun fromBytes(bytes: ByteArray, proto: String): Event? =
 	when (proto) {
 		Home.Created.getDescriptor().fullName -> created.read(bytes)
 		Home.Migrated.getDescriptor().fullName -> migrated.read(bytes)
+		Home.Suspended.getDescriptor().fullName -> suspended.read(bytes)
 		else -> null
 	}
 
