@@ -75,6 +75,48 @@ internal class AccountTest {
 		assertTrue(account.addHomeEntitlement(50).isNotEmpty())
 	}
 
+	@Test
+	fun homeCannotBeAddedWithoutEntitlement()	{
+		val account = Account(State(), listOf(Created("test")))
+
+		val events = account.addHome("test-home")
+
+		assertTrue(events.isEmpty())
+	}
+
+	@Test
+	fun homeCannotBeAddedWhenAccountSuspended()	{
+		val account = Account(State(),
+			listOf(Created("test"), HomeEntitlementAdded(10), Suspended("test")))
+
+		val events = account.addHome("test-home")
+
+		assertTrue(events.isEmpty())
+	}
+
+	@Test
+	fun homeCannotBeAddedWhenAccountClosed()	{
+		val account = Account(State(),
+			listOf(Created("test"), HomeEntitlementAdded(10), Closed("test")))
+
+		val events = account.addHome("test-home")
+
+		assertTrue(events.isEmpty())
+	}
+
+	@Test
+	fun homeCanBeAddedWithEntitlement()	{
+		val account = Account(State(), listOf(Created("test"), HomeEntitlementAdded(10)))
+
+		val events = account.addHome("test-home")
+
+		assertTrue(events.isNotEmpty())
+		assertTrue(events.size == 1)
+		assertTrue(events.first() is HomeAdded)
+
+		assertTrue(account.addHome("another-home").isEmpty())
+	}
+
 }
 
 
