@@ -29,7 +29,7 @@ private fun asRecord(id: String, event: Event): Record? {
 			is Migrated -> Record(id, Home.Created.getDescriptor().fullName, payload)
 			is Suspended -> Record(id, Home.Suspended.getDescriptor().fullName, payload)
 			is Closed -> Record(id, Home.Closed.getDescriptor().fullName, payload)
-			else -> null
+			is Reactivated -> null
 		}
 	}
 

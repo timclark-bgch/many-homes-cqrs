@@ -23,6 +23,14 @@ class HomeAggregate(private var state: HomeState, events: List<Event>) {
 		}
 	}
 
+	private fun mutate(mutation: () -> List<Event>): List<Event> {
+		val events = mutation()
+
+		events.forEach { e -> state = apply(e) }
+
+		return events
+	}
+
 	fun suspend(reason: String): List<Event> =
 		mutate {
 			when (state.status) {
@@ -46,14 +54,6 @@ class HomeAggregate(private var state: HomeState, events: List<Event>) {
 				else -> listOf()
 			}
 		}
-
-	private fun mutate(mutation: () -> List<Event>): List<Event> {
-		val events = mutation()
-
-		events.forEach { e -> state = apply(e) }
-
-		return events
-	}
 }
 
 sealed class Status {
