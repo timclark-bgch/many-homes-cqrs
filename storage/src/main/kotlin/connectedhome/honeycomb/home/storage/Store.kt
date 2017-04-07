@@ -54,8 +54,8 @@ class SimpleStore : Store {
 
 	override fun read(id: String): List<Event> {
 		return store
-			.filter { r -> r.id == id }
-			.map { r -> asEvent(r) }
+			.filter { it.id == id }
+			.map { asEvent(it) }
 			.filterNotNull()
 	}
 }

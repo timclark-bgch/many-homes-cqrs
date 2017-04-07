@@ -114,7 +114,6 @@ private val reactivated = object : Converter<Reactivated> {
 			.setReason(event.reason)
 			.build()
 			.toByteArray()
-
 }
 
 
