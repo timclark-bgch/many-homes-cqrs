@@ -5,7 +5,7 @@ abstract class Aggregate<S, E>(protected var state: S, events: List<E>) {
 		events.forEach { e -> state = apply(e) }
 	}
 
-	abstract fun apply(event: E): S
+	abstract protected fun apply(event: E): S
 
 	protected fun mutate(mutation: () -> List<E>): List<E> {
 		val events = mutation()
