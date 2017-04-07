@@ -48,4 +48,15 @@ final class EventsTest {
 		assertThat(closed).hasFieldOrPropertyWithValue("home", id);
 		assertThat(closed).hasFieldOrPropertyWithValue("reason", reason);
 	}
+
+	@Test
+	void testReactivated()	{
+		final String id = "test_id";
+		final String reason = "test_reason";
+
+		final Home.Reactivated closed = Home.Reactivated.newBuilder().setHome(id).setReason(reason).build();
+
+		assertThat(closed).hasFieldOrPropertyWithValue("home", id);
+		assertThat(closed).hasFieldOrPropertyWithValue("reason", reason);
+	}
 }

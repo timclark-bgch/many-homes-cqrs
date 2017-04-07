@@ -111,6 +111,31 @@ final class ConverterTest {
 	}
 
 	@Test
+	void reactivatedAsBytes() throws InvalidProtocolBufferException {
+		final String reason = "reason";
+		final String id = "test-id";
+		final byte[] bytes = ConverterKt.asBytes(new Reactivated(reason), id);
+
+		assertThat(bytes).isNotNull();
+
+		final Home.Reactivated reactivated = Home.Reactivated.parseFrom(bytes);
+		assertThat(reactivated).hasFieldOrPropertyWithValue("home", id);
+		assertThat(reactivated).hasFieldOrPropertyWithValue("reason", reason);
+	}
+
+	@Test
+	void reactivatedFromBytes() {
+		final String reason = "reason";
+		final byte[] bytes = Home.Reactivated.newBuilder().setHome("test-id").setReason(reason).build().toByteArray();
+
+		final Event event = ConverterKt.fromBytes(bytes, Home.Reactivated.getDescriptor().getFullName());
+
+		assertThat(event).isNotNull();
+		assertThat(event).isInstanceOf(Reactivated.class);
+		assertThat(event).hasFieldOrPropertyWithValue("reason", reason);
+	}
+
+	@Test
 	void badDataFails() {
 		final Event event = ConverterKt.fromBytes("bad-bytes".getBytes(), Home.Created.getDescriptor().getFullName());
 

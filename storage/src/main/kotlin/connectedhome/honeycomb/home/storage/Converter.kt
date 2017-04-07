@@ -4,6 +4,25 @@ import com.google.protobuf.InvalidProtocolBufferException
 import connectedhome.honeycomb.home.domain.*
 import honeycomb.home.events.Home
 
+fun asBytes(event: Event, id: String): ByteArray? =
+	when (event) {
+		is Created -> created.write(event, id)
+		is Migrated -> migrated.write(event, id)
+		is Suspended -> suspended.write(event, id)
+		is Closed -> closed.write(event, id)
+		is Reactivated -> reactivated.write(event, id)
+	}
+
+fun fromBytes(bytes: ByteArray, proto: String): Event? =
+	when (proto) {
+		Home.Created.getDescriptor().fullName -> created.read(bytes)
+		Home.Migrated.getDescriptor().fullName -> migrated.read(bytes)
+		Home.Suspended.getDescriptor().fullName -> suspended.read(bytes)
+		Home.Closed.getDescriptor().fullName -> closed.read(bytes)
+		Home.Reactivated.getDescriptor().fullName -> reactivated.read(bytes)
+		else -> null
+	}
+
 private interface Converter<T> {
 	fun read(bytes: ByteArray): T?
 	fun write(event: T, id: String): ByteArray?
@@ -80,21 +99,22 @@ private val closed = object : Converter<Closed> {
 			.toByteArray()
 }
 
-fun asBytes(event: Event, id: String): ByteArray? =
-	when (event) {
-		is Created -> created.write(event, id)
-		is Migrated -> migrated.write(event, id)
-		is Suspended -> suspended.write(event, id)
-		is Closed -> closed.write(event, id)
-		else -> null
-	}
+private val reactivated = object : Converter<Reactivated> {
+	override fun read(bytes: ByteArray): Reactivated? =
+		try {
+			Reactivated(Home.Reactivated.parseFrom(bytes).reason)
+		}
+		catch (e: InvalidProtocolBufferException) {
+			null
+		}
 
-fun fromBytes(bytes: ByteArray, proto: String): Event? =
-	when (proto) {
-		Home.Created.getDescriptor().fullName -> created.read(bytes)
-		Home.Migrated.getDescriptor().fullName -> migrated.read(bytes)
-		Home.Suspended.getDescriptor().fullName -> suspended.read(bytes)
-		Home.Closed.getDescriptor().fullName -> closed.read(bytes)
-		else -> null
-	}
+	override fun write(event: Reactivated, id: String): ByteArray? =
+		Home.Reactivated.newBuilder()
+			.setHome(id)
+			.setReason(event.reason)
+			.build()
+			.toByteArray()
+
+}
+
 
