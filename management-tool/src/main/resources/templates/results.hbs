@@ -2,33 +2,151 @@
 	<table>
 		<thead>
 		<tr>
-			<th width="200">Table Header</th>
-			<th>Table Header</th>
-			<th width="150">Table Header</th>
-			<th width="150">Table Header</th>
+			<th>Owner</th>
+			<th>Status</th>
+			<th>Properties</th>
+			<th>Users</th>
+			<th>Operations</th>
 		</tr>
 		</thead>
 		<tbody>
-		<tr>
-			<td>Content Goes Here</td>
-			<td>This is longer content Donec id elit non mi porta gravida at eget metus.</td>
-			<td>Content Goes Here</td>
-			<td>Content Goes Here</td>
-		</tr>
-		<tr>
-			<td>Content Goes Here</td>
-			<td>This is longer Content Goes Here Donec id elit non mi porta gravida at eget metus.</td>
-			<td>Content Goes Here</td>
-			<td>Content Goes Here</td>
-		</tr>
-		<tr>
-			<td>Content Goes Here</td>
-			<td>This is longer Content Goes Here Donec id elit non mi porta gravida at eget metus.</td>
-			<td>Content Goes Here</td>
-			<td>Content Goes Here</td>
-		</tr>
+		{{#each accounts}}
+			<tr>
+				<td>{{owner}}</td>
+				<td>
+					{{#if active}}<span class="label success">Active</span>{{/if}}
+					{{#if suspended}}<span class="label warning">Suspended</span>{{/if}}
+					{{#if closed}}<span class="label secondary">Closed</span>{{/if}}
+				</td>
+				<td>{{properties}}</td>
+				<td>{{users}}</td>
+				<td>
+					<ul class="menu">
+						<li><a data-open="view-{{id}}">View</a></li>
+						<li>&nbsp;&nbsp;&nbsp;</li>
+						{{#if active}}
+							<li><a data-open="modify-{{id}}">Change</a></li>
+							<li><a data-open="suspend-{{id}}">Suspend</a></li>
+							<li><a data-open="close-{{id}}">Close</a></li>
+						{{/if}}
+						{{#if suspended}}
+							<li><a data-open="reactivate-{{id}}">Reactivate</a></li>
+							<li><a data-open="close-{{id}}">Close</a></li>
+						{{/if}}
+						{{#if closed}}
+							<li><a data-open="reactivate-{{id}}">Reactivate</a></li>
+						{{/if}}
+					</ul>
+				</td>
+			</tr>
+		{{/each}}
 		</tbody>
 	</table>
+
+	{{#each accounts}}
+		<div class="full reveal" id="view-{{id}}" data-reveal>
+			<h1>View account {{id}}
+				<small>{{owner}}</small>
+			</h1>
+			<button class="close-button" data-close aria-label="Close modal" type="button">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+
+		<div class="full reveal" id="modify-{{id}}" data-reveal>
+			<h1>Modify account {{id}}
+				<small>{{owner}}</small>
+			</h1>
+			<div class="callout primary">
+				<h2>Add entitlement for a property</h2>
+				<p>Use this form to add an entitlement for a property</p>
+				<form>
+					<div class="input-group">
+						<span class="input-group-label">Maximum users</span>
+						<input class="input-group-field" type="number">
+						<div class="input-group-button">
+							<input type="submit" class="button" value="Submit">
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="callout primary">
+				<h2>Add a property</h2>
+				<p>Use this form to add a property</p>
+				<form>
+					<div class="input-group">
+						<span class="input-group-label">Property name</span>
+						<input class="input-group-field" type="text">
+						<div class="input-group-button">
+							<input type="submit" class="button" value="Submit">
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="callout alert">
+				<h2>Remove an entitlement for a property</h2>
+				<p>Use this form to remove an entitlement for a property</p>
+				<form>
+					<label>Entitlement
+						<select>
+							<option value="husker">Husker</option>
+							<option value="starbuck">Starbuck</option>
+							<option value="hotdog">Hot Dog</option>
+							<option value="apollo">Apollo</option>
+						</select>
+					</label>
+					<input type="submit" class="button" value="Submit">
+				</form>
+			</div>
+
+			<div class="callout alert">
+				<h2>Remove a property</h2>
+				<p>Use this form to remove a property</p>
+				<form>
+					<label>Property
+						<select>
+							<option value="husker">Husker</option>
+							<option value="starbuck">Starbuck</option>
+							<option value="hotdog">Hot Dog</option>
+							<option value="apollo">Apollo</option>
+						</select>
+					</label>
+					<input type="submit" class="button" value="Submit">
+				</form>
+			</div>
+
+			<button class="close-button" data-close aria-label="Close modal" type="button">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+
+		<div class="full reveal" id="close-{{id}}" data-reveal>
+			<h1>Close account {{id}}
+				<small>{{owner}}</small>
+			</h1>
+			<button class="close-button" data-close aria-label="Close modal" type="button">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+
+		<div class="full reveal" id="suspend-{{id}}" data-reveal>
+			<h1>Suspend account {{id}}
+				<small>{{owner}}</small>
+			</h1>
+			<button class="close-button" data-close aria-label="Close modal" type="button">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+
+		<div class="full reveal" id="reactivate-{{id}}" data-reveal>
+			<h1>Reactivate account {{id}}
+				<small>{{owner}}</small>
+			</h1>
+			<button class="close-button" data-close aria-label="Close modal" type="button">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+	{{/each}}
 {{/partial}}
 
 {{> layout}}
