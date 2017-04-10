@@ -15,6 +15,7 @@
 		<module>events</module>
 		<module>storage</module>
 		<module>domain</module>
+		<module>management-tool</module>
 	</modules>
 
 
