@@ -6,26 +6,26 @@ option java_package = "honeycomb.home.events";
 
 
 message Created {
-    string home = 1;
-    string owner = 2;
+	string home = 1;
+	string owner = 2;
 }
 
 message Migrated {
-    string home = 1;
-    string owner = 2;
+	string home = 1;
+	string owner = 2;
 }
 
 message Suspended {
-    string home = 1;
-    string reason = 2;
+	string home = 1;
+	string reason = 2;
 }
 
 message Closed {
-    string home = 1;
-    string reason = 2;
+	string home = 1;
+	string reason = 2;
 }
 
 message Reactivated {
-    string home = 1;
-    string reason = 2;
+	string home = 1;
+	string reason = 2;
 }
