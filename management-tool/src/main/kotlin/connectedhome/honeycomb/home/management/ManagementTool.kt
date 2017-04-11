@@ -10,21 +10,66 @@ fun main(args: Array<String>) {
 	get("/home") { _, _ -> render(emptyMap<String, Any>(), "overview") }
 	get("/accounts") { _, _ -> render(mapOf("accounts" to results()), "accounts") }
 
-	get("/error/:section") { req, _ -> error("/${req.params(":section")}") }
+	get("/error/:section") { req, _ -> render(mapOf("section" to "/${req.params(":section")}"), "error") }
 
 	post("/api/account/:account/entitlements/add") { req, rsp ->
 		when (addEntitlement(req.params(":account"), req.queryParams("maxUsers").toInt())) {
 			is Either.Left -> rsp.redirect("/error/accounts")
-			else -> {
-				rsp.redirect("/accounts")
-				null
-			}
+			else -> rsp.redirect("/accounts")
 		}
-	}
-}
 
-private fun error(section: String): String =
-	render(mapOf("section" to section), "error")
+		null
+	}
+
+	post("/api/account/:account/entitlements/remove") { req, rsp ->
+		if (removeEntitlement(req.params(":account"), req.queryParams("entitlement"))) {
+			rsp.redirect("/accounts")
+		}
+
+		rsp.redirect("/error/accounts")
+	}
+
+	post("/api/account/:account/property/add") { req, rsp ->
+		if (addProperty(req.params(":account"), req.queryParams("property"))) {
+			rsp.redirect("/accounts")
+		}
+
+		rsp.redirect("/error/accounts")
+	}
+
+	post("/api/account/:account/property/remove") { req, rsp ->
+		if (addProperty(req.params(":account"), req.queryParams("property"))) {
+			rsp.redirect("/accounts")
+		}
+
+		rsp.redirect("/error/accounts")
+	}
+
+	post("/api/account/:account/close") { req, rsp ->
+		if (close(req.params(":account"), req.queryParams("reason"))) {
+			rsp.redirect("/accounts")
+		}
+
+		rsp.redirect("/error/accounts")
+	}
+
+	post("/api/account/:account/suspend") { req, rsp ->
+		if (suspend(req.params(":account"), req.queryParams("reason"))) {
+			rsp.redirect("/accounts")
+		}
+
+		rsp.redirect("/error/accounts")
+	}
+
+	post("/api/account/:account/activate") { req, rsp ->
+		if (reactivate(req.params(":account"), req.queryParams("reason"))) {
+			rsp.redirect("/accounts")
+		}
+
+		rsp.redirect("/error/accounts")
+	}
+
+}
 
 private fun render(model: Map<String, Any>, template: String): String =
 	HandlebarsTemplateEngine().render(ModelAndView(model, template))
@@ -53,9 +98,13 @@ data class AccountOverview(
 
 private fun results(): List<AccountOverview> {
 	return listOf(
-		AccountOverview("1", "Tommy Tippee", AccountStatus.Active, listOf("E1"), listOf("P1"), listOf("U1", "U2")),
-		AccountOverview("2", "Zippy Zappee", AccountStatus.Suspended, listOf("E1", "E2"), listOf("P2", "P4"), listOf("U5")),
-		AccountOverview("3", "Big Bertrand", AccountStatus.Closed, listOf("E4"), listOf("P3"), listOf("U4", "U6"))
+		AccountOverview("1", "Barry Gibb", AccountStatus.Active, listOf("E1"), listOf("P1"), listOf("U1", "U2")),
+		AccountOverview("2", "Robin Gibb", AccountStatus.Suspended, listOf("E1", "E2"), listOf("P2", "P4"), listOf("U5")),
+		AccountOverview("3", "Maurice Gibb", AccountStatus.Closed, listOf("E4"), listOf("P3"), listOf("U4", "U6")),
+		AccountOverview("4", "Agnetha Fältskog", AccountStatus.Closed, listOf("E4"), listOf("P3"), listOf("U4", "U6")),
+		AccountOverview("5", "Björn Ulvaeus", AccountStatus.Closed, listOf("E4"), listOf("P3"), listOf("U4", "U6")),
+		AccountOverview("6", "Benny Andersson", AccountStatus.Closed, listOf("E4"), listOf("P3"), listOf("U4", "U6")),
+		AccountOverview("7", "Anni-Frid Lyngstad", AccountStatus.Closed, listOf("E4"), listOf("P3"), listOf("U4", "U6"))
 	)
 }
 
