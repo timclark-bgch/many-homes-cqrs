@@ -4,6 +4,7 @@
 		<tr>
 			<th>Owner</th>
 			<th>Status</th>
+			<th>Active entitlements</th>
 			<th>Properties</th>
 			<th>Users</th>
 			<th>Operations</th>
@@ -18,8 +19,9 @@
 					{{#if suspended}}<span class="label warning">Suspended</span>{{/if}}
 					{{#if closed}}<span class="label secondary">Closed</span>{{/if}}
 				</td>
-				<td>{{properties}}</td>
-				<td>{{users}}</td>
+				<td>{{entitlementCount}}</td>
+				<td>{{propertyCount}}</td>
+				<td>{{userCount}}</td>
 				<td>
 					<ul class="menu">
 						<li><a data-open="view-{{id}}">View</a></li>
@@ -89,13 +91,12 @@
 				<form>
 					<label>Entitlement
 						<select>
-							<option value="husker">Husker</option>
-							<option value="starbuck">Starbuck</option>
-							<option value="hotdog">Hot Dog</option>
-							<option value="apollo">Apollo</option>
+							{{#each entitlements}}
+								<option value="{{.}}">{{.}}</option>
+							{{/each}}
 						</select>
 					</label>
-					<input type="submit" class="button" value="Submit">
+					<input type="submit" class="button" value="Remove">
 				</form>
 			</div>
 
@@ -105,13 +106,12 @@
 				<form>
 					<label>Property
 						<select>
-							<option value="husker">Husker</option>
-							<option value="starbuck">Starbuck</option>
-							<option value="hotdog">Hot Dog</option>
-							<option value="apollo">Apollo</option>
+							{{#each properties}}
+								<option value="{{.}}">{{.}}</option>
+							{{/each}}
 						</select>
 					</label>
-					<input type="submit" class="button" value="Submit">
+					<input type="submit" class="button" value="Remove">
 				</form>
 			</div>
 
