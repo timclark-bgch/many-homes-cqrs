@@ -47,7 +47,7 @@ internal class AccountTest {
 	fun entitlementCannotBeAddedIfAccountClosed()	{
 		val account = Account(State(), listOf(Created("test"), Closed("test")))
 
-		val events = account.addHomeEntitlement(10)
+		val events = account.addPropertyEntitlement(10)
 
 		assertTrue(events.isEmpty())
 	}
@@ -56,7 +56,7 @@ internal class AccountTest {
 	fun entitlementCannotBeAddedIfAccountSuspended()	{
 		val account = Account(State(), listOf(Created("test"), Suspended("test")))
 
-		val events = account.addHomeEntitlement(10)
+		val events = account.addPropertyEntitlement(10)
 
 		assertTrue(events.isEmpty())
 	}
@@ -65,21 +65,21 @@ internal class AccountTest {
 	fun entitlementCanBeAdded()	{
 		val account = Account(State(), listOf(Created("test")))
 
-		val events = account.addHomeEntitlement(10)
+		val events = account.addPropertyEntitlement(10)
 
 		assertTrue(events.isNotEmpty())
 		assertTrue(events.size == 1)
-		assertTrue(events.first() is HomeEntitlementAdded)
+		assertTrue(events.first() is PropertyEntitlementAdded)
 
-		assertTrue(account.addHomeEntitlement(5).isNotEmpty())
-		assertTrue(account.addHomeEntitlement(50).isNotEmpty())
+		assertTrue(account.addPropertyEntitlement(5).isNotEmpty())
+		assertTrue(account.addPropertyEntitlement(50).isNotEmpty())
 	}
 
 	@Test
 	fun homeCannotBeAddedWithoutEntitlement()	{
 		val account = Account(State(), listOf(Created("test")))
 
-		val events = account.addHome("test-home")
+		val events = account.addProperty("test-home")
 
 		assertTrue(events.isEmpty())
 	}
@@ -87,9 +87,9 @@ internal class AccountTest {
 	@Test
 	fun homeCannotBeAddedWhenAccountSuspended()	{
 		val account = Account(State(),
-			listOf(Created("test"), HomeEntitlementAdded(10), Suspended("test")))
+			listOf(Created("test"), PropertyEntitlementAdded(10), Suspended("test")))
 
-		val events = account.addHome("test-home")
+		val events = account.addProperty("test-home")
 
 		assertTrue(events.isEmpty())
 	}
@@ -97,24 +97,24 @@ internal class AccountTest {
 	@Test
 	fun homeCannotBeAddedWhenAccountClosed()	{
 		val account = Account(State(),
-			listOf(Created("test"), HomeEntitlementAdded(10), Closed("test")))
+			listOf(Created("test"), PropertyEntitlementAdded(10), Closed("test")))
 
-		val events = account.addHome("test-home")
+		val events = account.addProperty("test-home")
 
 		assertTrue(events.isEmpty())
 	}
 
 	@Test
 	fun homeCanBeAddedWithEntitlement()	{
-		val account = Account(State(), listOf(Created("test"), HomeEntitlementAdded(10)))
+		val account = Account(State(), listOf(Created("test"), PropertyEntitlementAdded(10)))
 
-		val events = account.addHome("test-home")
+		val events = account.addProperty("test-home")
 
 		assertTrue(events.isNotEmpty())
 		assertTrue(events.size == 1)
-		assertTrue(events.first() is HomeAdded)
+		assertTrue(events.first() is PropertyAdded)
 
-		assertTrue(account.addHome("another-home").isEmpty())
+		assertTrue(account.addProperty("another-home").isEmpty())
 	}
 
 }

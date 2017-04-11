@@ -75,37 +75,4 @@ private fun render(model: Map<String, Any>, template: String): String =
 	HandlebarsTemplateEngine().render(ModelAndView(model, template))
 
 
-//enum class AccountStatus {
-//	Active, Suspended, Closed
-//}
-//
-//data class AccountOverview(
-//	val id: String,
-//	val owner: String,
-//	val status: AccountStatus,
-//	val entitlements: List<String>,
-//	val properties: List<String>,
-//	val users: List<String>) {
-//
-//	val active = status == AccountStatus.Active
-//	val suspended = status == AccountStatus.Suspended
-//	val closed = status == AccountStatus.Closed
-//
-//	val entitlementCount = entitlements.size
-//	val propertyCount = properties.size
-//	val userCount = users.size
-//}
-
-//private fun results(): List<AccountOverview> {
-//	return listOf(
-//		AccountOverview("1", "Barry Gibb", AccountStatus.Active, listOf("E1"), listOf("P1"), listOf("U1", "U2")),
-//		AccountOverview("2", "Robin Gibb", AccountStatus.Suspended, listOf("E1", "E2"), listOf("P2", "P4"), listOf("U5")),
-//		AccountOverview("3", "Maurice Gibb", AccountStatus.Closed, listOf("E4"), listOf("P3"), listOf("U4", "U6")),
-//		AccountOverview("4", "Agnetha Fältskog", AccountStatus.Closed, listOf("E4"), listOf("P3"), listOf("U4", "U6")),
-//		AccountOverview("5", "Björn Ulvaeus", AccountStatus.Closed, listOf("E4"), listOf("P3"), listOf("U4", "U6")),
-//		AccountOverview("6", "Benny Andersson", AccountStatus.Closed, listOf("E4"), listOf("P3"), listOf("U4", "U6")),
-//		AccountOverview("7", "Anni-Frid Lyngstad", AccountStatus.Closed, listOf("E4"), listOf("P3"), listOf("U4", "U6"))
-//	)
-//}
-
 

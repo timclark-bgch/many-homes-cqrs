@@ -7,8 +7,8 @@ data class Created(val owner: String) : Event()
 data class Suspended(val reason: String) : Event()
 data class Reactivated(val reason: String) : Event()
 data class Closed(val reason: String) : Event()
-data class HomeEntitlementAdded(val maxUsers: Int) : Event()
-data class HomeAdded(val home: String) : Event()
+data class PropertyEntitlementAdded(val maxUsers: Int) : Event()
+data class PropertyAdded(val home: String) : Event()
 
 sealed class Status {
 	class Active : Status()
@@ -21,7 +21,7 @@ data class HomeEntitlement(val maxUsers: Int)
 data class State(
 	val status: Status = Status.Active(),
 	val entitlements: List<HomeEntitlement> = emptyList(),
-	val homes: List<String> = emptyList())
+	val properties: List<String> = emptyList())
 
 private fun State.updated(maxUsers: Int): List<HomeEntitlement> {
 	val entitlements = this.entitlements.toMutableList()
@@ -31,15 +31,15 @@ private fun State.updated(maxUsers: Int): List<HomeEntitlement> {
 	return entitlements
 }
 
-private fun State.addHome(home: String): List<String> {
-	val homes = this.homes.toMutableList()
+private fun State.addProperty(home: String): List<String> {
+	val homes = this.properties.toMutableList()
 	homes.add(home)
 
 	return homes
 }
 
 private fun State.entitled(): Boolean =
-	this.entitlements.size > this.homes.size
+	this.entitlements.size > this.properties.size
 
 class Account(state: State, events: List<Event>) : Aggregate<State, Event>(state, events) {
 	override fun apply(event: Event): State = when (event) {
@@ -47,8 +47,8 @@ class Account(state: State, events: List<Event>) : Aggregate<State, Event>(state
 		is Suspended -> state.copy(status = Status.Suspended())
 		is Reactivated -> state.copy(status = Status.Active())
 		is Closed -> state.copy(status = Status.Closed())
-		is HomeEntitlementAdded -> state.copy(entitlements = state.updated(event.maxUsers))
-		is HomeAdded -> state.copy(homes = state.addHome(event.home))
+		is PropertyEntitlementAdded -> state.copy(entitlements = state.updated(event.maxUsers))
+		is PropertyAdded -> state.copy(properties = state.addProperty(event.home))
 	}
 
 	fun suspend(reason: String): List<Event> =
@@ -75,18 +75,18 @@ class Account(state: State, events: List<Event>) : Aggregate<State, Event>(state
 			}
 		}
 
-	fun addHomeEntitlement(maxUsers: Int): List<Event> =
+	fun addPropertyEntitlement(maxUsers: Int): List<Event> =
 		mutate {
 			when (state.status) {
-				is Status.Active -> listOf(HomeEntitlementAdded(maxUsers))
+				is Status.Active -> listOf(PropertyEntitlementAdded(maxUsers))
 				else -> emptyList()
 			}
 		}
 
-	fun addHome(home: String): List<Event> =
+	fun addProperty(home: String): List<Event> =
 		mutate {
 			when (state.status) {
-				is Status.Active -> if (state.entitled()) listOf(HomeAdded(home)) else emptyList()
+				is Status.Active -> if (state.entitled()) listOf(PropertyAdded(home)) else emptyList()
 				else -> emptyList()
 			}
 		}
