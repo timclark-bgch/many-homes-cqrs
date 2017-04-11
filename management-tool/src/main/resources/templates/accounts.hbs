@@ -2,6 +2,7 @@
 	<table>
 		<thead>
 		<tr>
+			<th>Account</th>
 			<th>Owner</th>
 			<th>Status</th>
 			<th>Active entitlements</th>
@@ -13,6 +14,7 @@
 		<tbody>
 		{{#each accounts}}
 			<tr>
+				<td>{{id}}</td>
 				<td>{{owner}}</td>
 				<td>
 					{{#if active}}<span class="label success">Active</span>{{/if}}
@@ -62,10 +64,10 @@
 			<div class="callout primary">
 				<h2>Add entitlement for a property</h2>
 				<p>Use this form to add an entitlement for a property</p>
-				<form>
+				<form action="/api/account/{{id}}/entitlements/add" method="post">
 					<div class="input-group">
 						<span class="input-group-label">Maximum users</span>
-						<input class="input-group-field" type="number">
+						<input class="input-group-field" type="number" name="maxUsers">
 						<div class="input-group-button">
 							<input type="submit" class="button" value="Submit">
 						</div>

@@ -9,7 +9,22 @@ fun main(args: Array<String>) {
 	get("/ping") { _, _ -> "PONG!" }
 	get("/home") { _, _ -> render(emptyMap<String, Any>(), "overview") }
 	get("/accounts") { _, _ -> render(mapOf("accounts" to results()), "accounts") }
+
+	get("/error/:section") { req, _ -> error("/${req.params(":section")}") }
+
+	post("/api/account/:account/entitlements/add") { req, rsp ->
+		when (addEntitlement(req.params(":account"), req.queryParams("maxUsers").toInt())) {
+			is Either.Left -> rsp.redirect("/error/accounts")
+			else -> {
+				rsp.redirect("/accounts")
+				null
+			}
+		}
+	}
 }
+
+private fun error(section: String): String =
+	render(mapOf("section" to section), "error")
 
 private fun render(model: Map<String, Any>, template: String): String =
 	HandlebarsTemplateEngine().render(ModelAndView(model, template))
