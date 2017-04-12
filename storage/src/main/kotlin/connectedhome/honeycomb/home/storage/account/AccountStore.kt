@@ -1,26 +1,11 @@
 package connectedhome.honeycomb.home.storage.account
 
-import com.google.protobuf.InvalidProtocolBufferException
 import connectedhome.honeycomb.home.domain.account.Created
 import connectedhome.honeycomb.home.domain.account.Event
 import connectedhome.honeycomb.home.domain.account.Suspended
 import connectedhome.honeycomb.home.storage.*
+import connectedhome.honeycomb.home.storage.protobuf.*
 import honeycomb.home.events.account.Account
-
-private interface Converter<T> {
-	fun read(bytes: ByteArray): T?
-	fun write(event: T, id: String): Record
-	fun proto(): String
-}
-
-private fun <T> fromProtobuf(bytes: ByteArray, convert: (ByteArray) -> T): T? {
-	return try {
-		convert(bytes)
-	}
-	catch(e: InvalidProtocolBufferException) {
-		null
-	}
-}
 
 private val created = object : Converter<Created> {
 	override fun read(bytes: ByteArray): Created? =
