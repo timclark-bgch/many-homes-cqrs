@@ -79,7 +79,7 @@ internal class AccountTest {
 	fun homeCannotBeAddedWithoutEntitlement()	{
 		val account = Account(State(), listOf(Created("test")))
 
-		val events = account.addProperty("test-home")
+		val events = account.addProperty("test-property")
 
 		assertTrue(events.isEmpty())
 	}
@@ -89,7 +89,7 @@ internal class AccountTest {
 		val account = Account(State(),
 			listOf(Created("test"), PropertyEntitlementAdded(10), Suspended("test")))
 
-		val events = account.addProperty("test-home")
+		val events = account.addProperty("test-property")
 
 		assertTrue(events.isEmpty())
 	}
@@ -99,7 +99,7 @@ internal class AccountTest {
 		val account = Account(State(),
 			listOf(Created("test"), PropertyEntitlementAdded(10), Closed("test")))
 
-		val events = account.addProperty("test-home")
+		val events = account.addProperty("test-property")
 
 		assertTrue(events.isEmpty())
 	}
@@ -108,13 +108,13 @@ internal class AccountTest {
 	fun homeCanBeAddedWithEntitlement()	{
 		val account = Account(State(), listOf(Created("test"), PropertyEntitlementAdded(10)))
 
-		val events = account.addProperty("test-home")
+		val events = account.addProperty("test-property")
 
 		assertTrue(events.isNotEmpty())
 		assertTrue(events.size == 1)
 		assertTrue(events.first() is PropertyAdded)
 
-		assertTrue(account.addProperty("another-home").isEmpty())
+		assertTrue(account.addProperty("another-property").isEmpty())
 	}
 
 }

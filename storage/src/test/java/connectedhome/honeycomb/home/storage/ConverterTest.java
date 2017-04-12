@@ -17,13 +17,13 @@ final class ConverterTest {
 		assertThat(bytes).isNotNull();
 
 		final Home.Created created = Home.Created.parseFrom(bytes);
-		assertThat(created).hasFieldOrPropertyWithValue("home", id);
+		assertThat(created).hasFieldOrPropertyWithValue("property", id);
 		assertThat(created).hasFieldOrPropertyWithValue("owner", owner.getId());
 	}
 
 	@Test
 	void createdFromBytes() {
-		final String home = "test-home";
+		final String home = "test-property";
 		final String owner = "test-owner";
 		final Home.Created original = Home.Created.newBuilder().setHome(home).setOwner(owner).build();
 
@@ -43,13 +43,13 @@ final class ConverterTest {
 		assertThat(bytes).isNotNull();
 
 		final Home.Migrated created = Home.Migrated.parseFrom(bytes);
-		assertThat(created).hasFieldOrPropertyWithValue("home", id);
+		assertThat(created).hasFieldOrPropertyWithValue("property", id);
 		assertThat(created).hasFieldOrPropertyWithValue("owner", owner.getId());
 	}
 
 	@Test
 	void migratedFromBytes() {
-		final String home = "test-home";
+		final String home = "test-property";
 		final String owner = "test-owner";
 		final Home.Migrated original = Home.Migrated.newBuilder().setHome(home).setOwner(owner).build();
 
@@ -69,7 +69,7 @@ final class ConverterTest {
 		assertThat(bytes).isNotNull();
 
 		final Home.Suspended suspended = Home.Suspended.parseFrom(bytes);
-		assertThat(suspended).hasFieldOrPropertyWithValue("home", id);
+		assertThat(suspended).hasFieldOrPropertyWithValue("property", id);
 		assertThat(suspended).hasFieldOrPropertyWithValue("reason", reason);
 	}
 
@@ -94,7 +94,7 @@ final class ConverterTest {
 		assertThat(bytes).isNotNull();
 
 		final Home.Closed closed = Home.Closed.parseFrom(bytes);
-		assertThat(closed).hasFieldOrPropertyWithValue("home", id);
+		assertThat(closed).hasFieldOrPropertyWithValue("property", id);
 		assertThat(closed).hasFieldOrPropertyWithValue("reason", reason);
 	}
 
@@ -119,7 +119,7 @@ final class ConverterTest {
 		assertThat(bytes).isNotNull();
 
 		final Home.Reactivated reactivated = Home.Reactivated.parseFrom(bytes);
-		assertThat(reactivated).hasFieldOrPropertyWithValue("home", id);
+		assertThat(reactivated).hasFieldOrPropertyWithValue("property", id);
 		assertThat(reactivated).hasFieldOrPropertyWithValue("reason", reason);
 	}
 

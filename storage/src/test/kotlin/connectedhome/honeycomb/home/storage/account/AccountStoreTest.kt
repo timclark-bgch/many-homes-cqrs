@@ -1,8 +1,6 @@
 package connectedhome.honeycomb.home.storage.account
 
-import connectedhome.honeycomb.home.domain.account.Created
-import connectedhome.honeycomb.home.domain.account.Event
-import connectedhome.honeycomb.home.domain.account.Suspended
+import connectedhome.honeycomb.home.domain.account.*
 import connectedhome.honeycomb.home.storage.Persistence
 import connectedhome.honeycomb.home.storage.Record
 import org.junit.jupiter.api.Assertions.*
@@ -15,7 +13,15 @@ internal class AccountStoreTest {
 		val records = mutableListOf<Record>()
 		val store = AccountStore(TestPersistence(records))
 
-		val events = listOf(Created("owner"), Suspended("reason"))
+		val events = listOf(
+			Created("owner"),
+			PropertyEntitlementAdded(10),
+			PropertyAdded("property"),
+			Suspended("suspended"),
+			Reactivated("reactivated"),
+			Closed("closed")
+		)
+
 		assertTrue(store.write("123", events))
 		assertEquals(events.size, records.size)
 	}
@@ -27,14 +33,26 @@ internal class AccountStoreTest {
 
 		val id = "123"
 		val owner = "owner"
-		val reason = "reason"
-		assertTrue(store.write(id, listOf(Created(owner), Suspended(reason))))
+		val events = listOf(
+			Created(owner),
+			PropertyEntitlementAdded(10),
+			PropertyAdded("property"),
+			Suspended("suspended"),
+			Reactivated("reactivated"),
+			Closed("closed")
+		)
 
-		val events = store.read(id)
-		assertEquals(2, events.size)
+		assertTrue(store.write(id, events))
 
-		checkCreated(events[0], owner)
-		checkSuspended(events[1], reason)
+		val stored = store.read(id)
+		assertEquals(6, stored.size)
+
+		checkCreated(stored[0], owner)
+		checkEntitlement(stored[1], 10)
+		checkPropertyAdded(stored[2], "property")
+		checkSuspended(stored[3], "suspended")
+		checkReactivated(stored[4], "reactivated")
+		checkClosed(stored[5], "closed")
 	}
 
 	fun checkCreated(event: Event, owner: String) {
@@ -45,6 +63,22 @@ internal class AccountStoreTest {
 		}
 	}
 
+	fun checkEntitlement(event: Event, users: Int) {
+		if (event is PropertyEntitlementAdded) {
+			assertEquals(users, event.maxUsers)
+		} else {
+			fail("Event type is not PropertyEntitlementAdded")
+		}
+	}
+
+	fun checkPropertyAdded(event: Event, property: String) {
+		if (event is PropertyAdded) {
+			assertEquals(property, event.property)
+		} else {
+			fail("Event type is not PropertyAdded")
+		}
+	}
+
 	fun checkSuspended(event: Event, reason: String) {
 		if (event is Suspended) {
 			assertEquals(reason, event.reason)
@@ -52,6 +86,23 @@ internal class AccountStoreTest {
 			fail("Event type is not Suspended")
 		}
 	}
+
+	fun checkReactivated(event: Event, reason: String) {
+		if (event is Reactivated) {
+			assertEquals(reason, event.reason)
+		} else {
+			fail("Event type is not Reactivated")
+		}
+	}
+
+	fun checkClosed(event: Event, reason: String) {
+		if (event is Closed) {
+			assertEquals(reason, event.reason)
+		} else {
+			fail("Event type is not Closed")
+		}
+	}
+
 }
 
 internal class TestPersistence(val records: MutableList<Record>) : Persistence {

@@ -8,7 +8,7 @@ data class Suspended(val reason: String) : Event()
 data class Reactivated(val reason: String) : Event()
 data class Closed(val reason: String) : Event()
 data class PropertyEntitlementAdded(val maxUsers: Int) : Event()
-data class PropertyAdded(val home: String) : Event()
+data class PropertyAdded(val property: String) : Event()
 
 sealed class Status {
 	class Active : Status()
@@ -48,7 +48,7 @@ class Account(state: State, events: List<Event>) : Aggregate<State, Event>(state
 		is Reactivated -> state.copy(status = Status.Active())
 		is Closed -> state.copy(status = Status.Closed())
 		is PropertyEntitlementAdded -> state.copy(entitlements = state.updated(event.maxUsers))
-		is PropertyAdded -> state.copy(properties = state.addProperty(event.home))
+		is PropertyAdded -> state.copy(properties = state.addProperty(event.property))
 	}
 
 	fun suspend(reason: String): List<Event> =
