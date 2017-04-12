@@ -5,6 +5,33 @@ import connectedhome.honeycomb.home.storage.*
 import connectedhome.honeycomb.home.storage.protobuf.*
 import honeycomb.home.events.account.Account
 
+class AccountStore(persistence: Persistence) : AbstractStore<Event>(persistence) {
+	override val converter: StorageConverter<Event> = object : StorageConverter<Event> {
+		override fun asRecord(id: String, event: Event): Record? =
+			when (event) {
+				is Created -> created.write(event, id)
+				is PropertyEntitlementAdded -> entitlementAdded.write(event, id)
+				is PropertyAdded -> propertyAdded.write(event, id)
+				is Suspended -> suspended.write(event, id)
+				is Closed -> closed.write(event, id)
+				is Reactivated -> reactivated.write(event, id)
+				else -> null
+			}
+
+		override fun fromRecord(record: Record): Event? {
+			return when (record.key.proto) {
+				created.proto() -> created.read(record.payload)
+				entitlementAdded.proto() -> entitlementAdded.read((record.payload))
+				propertyAdded.proto() -> propertyAdded.read(record.payload)
+				suspended.proto() -> suspended.read(record.payload)
+				closed.proto() -> closed.read(record.payload)
+				reactivated.proto() -> reactivated.read(record.payload)
+				else -> null
+			}
+		}
+	}
+}
+
 private val created = object : Converter<Created> {
 	override fun read(bytes: ByteArray): Created? =
 		fromProtobuf(bytes) { Created(Account.Created.parseFrom(bytes).owner) }
@@ -108,31 +135,6 @@ private val reactivated = object : Converter<Reactivated> {
 	override fun proto(): String = Account.Reactivated.getDescriptor().fullName
 }
 
-class AccountStore(persistence: Persistence) : AbstractStore<Event>(persistence) {
-	override val converter: StorageConverter<Event> = object : StorageConverter<Event> {
-		override fun asRecord(id: String, event: Event): Record? =
-			when (event) {
-				is Created -> created.write(event, id)
-				is PropertyEntitlementAdded -> entitlementAdded.write(event, id)
-				is PropertyAdded -> propertyAdded.write(event, id)
-				is Suspended -> suspended.write(event, id)
-				is Closed -> closed.write(event, id)
-				is Reactivated -> reactivated.write(event, id)
-				else -> null
-			}
 
-		override fun fromRecord(record: Record): Event? {
-			return when (record.key.proto) {
-				created.proto() -> created.read(record.payload)
-				entitlementAdded.proto() -> entitlementAdded.read((record.payload))
-				propertyAdded.proto() -> propertyAdded.read(record.payload)
-				suspended.proto() -> suspended.read(record.payload)
-				closed.proto() -> closed.read(record.payload)
-				reactivated.proto() -> reactivated.read(record.payload)
-				else -> null
-			}
-		}
-	}
-}
 
 
