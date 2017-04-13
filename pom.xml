@@ -16,6 +16,8 @@
 		<module>storage</module>
 		<module>domain</module>
 		<module>management-tool</module>
+		<module>commands</module>
+		<module>acceptance-tests</module>
 	</modules>
 
 
