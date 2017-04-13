@@ -18,6 +18,7 @@
 		<module>management-tool</module>
 		<module>commands</module>
 		<module>acceptance-tests</module>
+		<module>queries</module>
 	</modules>
 
 

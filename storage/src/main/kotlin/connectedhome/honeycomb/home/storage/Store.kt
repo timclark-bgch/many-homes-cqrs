@@ -1,5 +1,8 @@
 package connectedhome.honeycomb.home.storage
 
+import honeycomb.home.events.EventHolder
+import honeycomb.home.events.Listener
+
 
 data class Key(val id: String, val proto: String)
 class Record(val key: Key, val payload: ByteArray)
@@ -34,10 +37,17 @@ abstract class AbstractStore<T>(private val persistence: Persistence) : Store<T>
 
 }
 
-class SimplePersistence() : Persistence {
+class SimplePersistence(private val listener: Listener) : Persistence {
 	private val records = mutableListOf<Record>()
 
-	override fun write(records: List<Record>): Boolean = this.records.addAll(records)
+	override fun write(records: List<Record>): Boolean {
+		if (this.records.addAll(records)) {
+			records.forEach { r -> listener.event(EventHolder(r.key.proto, r.payload)) }
+			return true
+		}
+
+		return false
+	}
 
 	override fun read(id: String): List<Record> = records.filter { r -> r.key.id != id }
 }
