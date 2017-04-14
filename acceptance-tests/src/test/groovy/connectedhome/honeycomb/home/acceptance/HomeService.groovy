@@ -18,7 +18,6 @@ final class HomeService {
 	private final Listener listener = new Listener() {
 		@Override
 		void event(EventHolder holder) {
-			println("Event - ${holder.descriptor}")
 			ownerView.event(holder)
 		}
 	}

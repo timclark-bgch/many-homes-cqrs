@@ -15,7 +15,7 @@ internal class AccountStoreTest {
 
 		val events = listOf(
 			Created("owner"),
-			PropertyEntitlementAdded(10),
+			PropertyEntitlementAdded("entitlement", 1, 10),
 			PropertyAdded("property"),
 			Suspended("suspended"),
 			Reactivated("reactivated"),
@@ -35,7 +35,7 @@ internal class AccountStoreTest {
 		val owner = "owner"
 		val events = listOf(
 			Created(owner),
-			PropertyEntitlementAdded(10),
+			PropertyEntitlementAdded("entitlement", 2, 10),
 			PropertyAdded("property"),
 			Suspended("suspended"),
 			Reactivated("reactivated"),

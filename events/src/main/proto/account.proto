@@ -26,8 +26,9 @@ message Closed {
 
 message PropertyEntitlementAdded {
 	string account = 1;
-	int32 properties = 2;
-	int32 users = 3;
+	string label = 2;
+	int32 properties = 3;
+	int32 users = 4;
 }
 
 message PropertyAdded {

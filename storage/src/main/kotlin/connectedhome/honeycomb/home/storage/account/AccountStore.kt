@@ -52,13 +52,18 @@ private val created = object : Converter<Created> {
 
 private val entitlementAdded = object : Converter<PropertyEntitlementAdded> {
 	override fun read(bytes: ByteArray): PropertyEntitlementAdded? =
-		fromProtobuf(bytes) { PropertyEntitlementAdded(Account.PropertyEntitlementAdded.parseFrom(bytes).users) }
+		fromProtobuf(bytes) {
+			val entitlement = Account.PropertyEntitlementAdded.parseFrom(bytes)
+			PropertyEntitlementAdded(entitlement.label, entitlement.properties, entitlement.users)
+		}
 
 	override fun write(event: PropertyEntitlementAdded, id: String): Record =
 		Record(
 			Key(id, proto()),
 			Account.PropertyEntitlementAdded.newBuilder()
 				.setAccount(id)
+				.setLabel(event.label)
+				.setProperties(event.properties)
 				.setUsers(event.maxUsers)
 				.build()
 				.toByteArray()

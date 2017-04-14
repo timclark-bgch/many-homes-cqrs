@@ -7,7 +7,7 @@ data class Created(val owner: String) : Event()
 data class Suspended(val reason: String) : Event()
 data class Reactivated(val reason: String) : Event()
 data class Closed(val reason: String) : Event()
-data class PropertyEntitlementAdded(val maxUsers: Int) : Event()
+data class PropertyEntitlementAdded(val label: String, val properties: Int, val maxUsers: Int) : Event()
 data class PropertyAdded(val property: String) : Event()
 
 sealed class Status {
@@ -75,10 +75,10 @@ class Account(state: State, events: List<Event>) : Aggregate<State, Event>(state
 			}
 		}
 
-	fun addPropertyEntitlement(maxUsers: Int): List<Event> =
+	fun addPropertyEntitlement(label: String, properties: Int, maxUsers: Int): List<Event> =
 		mutate {
 			when (state.status) {
-				is Status.Active -> listOf(PropertyEntitlementAdded(maxUsers))
+				is Status.Active -> listOf(PropertyEntitlementAdded(label, properties, maxUsers))
 				else -> emptyList()
 			}
 		}

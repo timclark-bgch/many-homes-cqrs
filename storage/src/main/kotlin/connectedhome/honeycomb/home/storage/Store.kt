@@ -49,5 +49,5 @@ class SimplePersistence(private val listener: Listener) : Persistence {
 		return false
 	}
 
-	override fun read(id: String): List<Record> = records.filter { r -> r.key.id != id }
+	override fun read(id: String): List<Record> = records.filter { r -> r.key.id == id }
 }

@@ -47,7 +47,7 @@ internal class AccountTest {
 	fun entitlementCannotBeAddedIfAccountClosed()	{
 		val account = Account(State(), listOf(Created("test"), Closed("test")))
 
-		val events = account.addPropertyEntitlement(10)
+		val events = account.addPropertyEntitlement("test", 2, 10)
 
 		assertTrue(events.isEmpty())
 	}
@@ -56,7 +56,7 @@ internal class AccountTest {
 	fun entitlementCannotBeAddedIfAccountSuspended()	{
 		val account = Account(State(), listOf(Created("test"), Suspended("test")))
 
-		val events = account.addPropertyEntitlement(10)
+		val events = account.addPropertyEntitlement("test", 2, 10)
 
 		assertTrue(events.isEmpty())
 	}
@@ -65,14 +65,14 @@ internal class AccountTest {
 	fun entitlementCanBeAdded()	{
 		val account = Account(State(), listOf(Created("test")))
 
-		val events = account.addPropertyEntitlement(10)
+		val events = account.addPropertyEntitlement("test", 2, 10)
 
 		assertTrue(events.isNotEmpty())
 		assertTrue(events.size == 1)
 		assertTrue(events.first() is PropertyEntitlementAdded)
 
-		assertTrue(account.addPropertyEntitlement(5).isNotEmpty())
-		assertTrue(account.addPropertyEntitlement(50).isNotEmpty())
+		assertTrue(account.addPropertyEntitlement("test", 1, 5).isNotEmpty())
+		assertTrue(account.addPropertyEntitlement("test", 1, 50).isNotEmpty())
 	}
 
 	@Test
@@ -87,7 +87,7 @@ internal class AccountTest {
 	@Test
 	fun homeCannotBeAddedWhenAccountSuspended()	{
 		val account = Account(State(),
-			listOf(Created("test"), PropertyEntitlementAdded(10), Suspended("test")))
+			listOf(Created("test"), PropertyEntitlementAdded("test", 2, 10), Suspended("test")))
 
 		val events = account.addProperty("test-property")
 
@@ -97,7 +97,7 @@ internal class AccountTest {
 	@Test
 	fun homeCannotBeAddedWhenAccountClosed()	{
 		val account = Account(State(),
-			listOf(Created("test"), PropertyEntitlementAdded(10), Closed("test")))
+			listOf(Created("test"), PropertyEntitlementAdded("test", 2, 10), Closed("test")))
 
 		val events = account.addProperty("test-property")
 
@@ -106,7 +106,7 @@ internal class AccountTest {
 
 	@Test
 	fun homeCanBeAddedWithEntitlement()	{
-		val account = Account(State(), listOf(Created("test"), PropertyEntitlementAdded(10)))
+		val account = Account(State(), listOf(Created("test"), PropertyEntitlementAdded("test", 1, 10)))
 
 		val events = account.addProperty("test-property")
 
