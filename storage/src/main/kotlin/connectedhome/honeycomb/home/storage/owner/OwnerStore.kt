@@ -1,11 +1,11 @@
-package connectedhome.honeycomb.home.storage.account
+package connectedhome.honeycomb.home.storage.owner
 
 import connectedhome.honeycomb.home.domain.account.*
 import connectedhome.honeycomb.home.storage.*
 import connectedhome.honeycomb.home.storage.protobuf.*
 import honeycomb.home.events.account.Account
 
-class AccountStore(persistence: Persistence) : AbstractStore<Event>(persistence) {
+class OwnerStore(persistence: Persistence) : AbstractStore<Event>(persistence) {
 	override val converter: StorageConverter<Event> = object : StorageConverter<Event> {
 		override fun asRecord(id: String, event: Event): Record? =
 			when (event) {

@@ -1,4 +1,4 @@
-package connectedhome.honeycomb.home.storage.account
+package connectedhome.honeycomb.home.storage.owner
 
 import connectedhome.honeycomb.home.domain.account.*
 import connectedhome.honeycomb.home.storage.Persistence
@@ -6,12 +6,12 @@ import connectedhome.honeycomb.home.storage.Record
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-internal class AccountStoreTest {
+internal class OwnerStoreTest {
 
 	@Test
 	fun writesEvents() {
 		val records = mutableListOf<Record>()
-		val store = AccountStore(TestPersistence(records))
+		val store = OwnerStore(TestPersistence(records))
 
 		val events = listOf(
 			Created("owner"),
@@ -29,7 +29,7 @@ internal class AccountStoreTest {
 	@Test
 	fun readsEvents() {
 		val records = mutableListOf<Record>()
-		val store = AccountStore(TestPersistence(records))
+		val store = OwnerStore(TestPersistence(records))
 
 		val id = "123"
 		val owner = "owner"

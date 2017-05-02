@@ -6,8 +6,8 @@ import connectedhome.honeycomb.home.commands.Response
 import connectedhome.honeycomb.home.queries.simple.Owner
 import connectedhome.honeycomb.home.queries.simple.OwnerView
 import connectedhome.honeycomb.home.storage.SimplePersistence
-import connectedhome.honeycomb.home.storage.account.AccountRepository
-import connectedhome.honeycomb.home.storage.account.AccountStore
+import connectedhome.honeycomb.home.storage.owner.OwnerRepository
+import connectedhome.honeycomb.home.storage.owner.OwnerStore
 import honeycomb.home.events.EventHolder
 import honeycomb.home.events.Listener
 
@@ -23,8 +23,8 @@ final class HomeService {
 	}
 
 	private final SimplePersistence persistence = new SimplePersistence(listener)
-	private final AccountStore store = new AccountStore(persistence)
-	private final AccountRepository repository = new AccountRepository(store)
+	private final OwnerStore store = new OwnerStore(persistence)
+	private final OwnerRepository repository = new OwnerRepository(store)
 	private final CommandHandler commands = new CommandHandler(repository)
 
 	Response process(Command command) {

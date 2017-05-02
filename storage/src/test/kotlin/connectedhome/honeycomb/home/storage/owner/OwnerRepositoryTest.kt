@@ -1,14 +1,14 @@
-package connectedhome.honeycomb.home.storage.account
+package connectedhome.honeycomb.home.storage.owner
 
 import connectedhome.honeycomb.home.domain.account.Created
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-internal class AccountRepositoryTest	{
+internal class OwnerRepositoryTest {
 	@Test
 	fun fetchesAccountIfStored()	{
-		val store = AccountStore(TestPersistence(mutableListOf()))
-		val repository = AccountRepository(store)
+		val store = OwnerStore(TestPersistence(mutableListOf()))
+		val repository = OwnerRepository(store)
 
 		assertTrue(store.write("123", listOf(Created("owner"))))
 
@@ -17,8 +17,8 @@ internal class AccountRepositoryTest	{
 
 	@Test
 	fun accountNotFound()	{
-		val store = AccountStore(TestPersistence(mutableListOf()))
-		val repository = AccountRepository(store)
+		val store = OwnerStore(TestPersistence(mutableListOf()))
+		val repository = OwnerRepository(store)
 
 		assertTrue(store.write("123", listOf(Created("owner"))))
 

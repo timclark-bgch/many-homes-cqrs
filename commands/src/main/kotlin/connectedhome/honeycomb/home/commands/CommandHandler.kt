@@ -1,7 +1,7 @@
 package connectedhome.honeycomb.home.commands
 
 import connectedhome.honeycomb.home.domain.account.Created
-import connectedhome.honeycomb.home.storage.account.AccountRepository
+import connectedhome.honeycomb.home.storage.owner.OwnerRepository
 
 sealed class Response(val success: Boolean, val message: String?) {
 	object Success : Response(true, null)
@@ -9,50 +9,50 @@ sealed class Response(val success: Boolean, val message: String?) {
 }
 
 sealed class Command
-data class CreateAccount(val owner: String) : Command()
-data class SuspendAccount(val account: String, val reason: String) : Command()
-data class AddPropertyEntitlement(val account: String, val entitlement: String, val properties: Int, val users: Int) : Command()
+data class CreateOwner(val owner: String) : Command()
+data class SuspendOwner(val owner: String, val reason: String) : Command()
+data class AddPropertyEntitlement(val owner: String, val entitlement: String, val properties: Int, val users: Int) : Command()
 
-class CommandHandler(private val accounts: AccountRepository) {
+class CommandHandler(private val accounts: OwnerRepository) {
 	fun handle(command: Command): Response {
 		return when (command) {
-			is CreateAccount -> createAccount(command)
-			is SuspendAccount -> suspendAccount(command)
+			is CreateOwner -> createAccount(command)
+			is SuspendOwner -> suspendAccount(command)
 			is AddPropertyEntitlement -> addEntitlement(command)
 			else -> Response.Failure("Unknown command")
 		}
 	}
 
-	private fun createAccount(command: CreateAccount): Response {
+	private fun createAccount(command: CreateOwner): Response {
 		if (accounts.store(command.owner, 1, listOf(Created(command.owner)))) {
 			return Response.Success
 		}
 
-		return Response.Failure("Unable to create account")
+		return Response.Failure("Unable to create owner")
 	}
 
-	private fun suspendAccount(command: SuspendAccount): Response {
-		val account = accounts.fetch(command.account)
+	private fun suspendAccount(command: SuspendOwner): Response {
+		val account = accounts.fetch(command.owner)
 		if (account != null) {
-			if (accounts.store(command.account, 1, account.suspend(command.reason))) {
+			if (accounts.store(command.owner, 1, account.suspend(command.reason))) {
 				return Response.Success
 			}
 
-			return Response.Failure("Unable to store account")
+			return Response.Failure("Unable to store owner")
 		}
 
-		return Response.Failure("Unknown account")
+		return Response.Failure("Unknown owner")
 	}
 
 	private fun addEntitlement(command: AddPropertyEntitlement): Response {
-		val account = accounts.fetch(command.account)
+		val account = accounts.fetch(command.owner)
 		if (account != null) {
-			if (accounts.store(command.account, 1, account.addPropertyEntitlement(command.entitlement, command.properties, command.users))) {
+			if (accounts.store(command.owner, 1, account.addPropertyEntitlement(command.entitlement, command.properties, command.users))) {
 				return Response.Success
 			}
-			return Response.Failure("Unable to store account")
+			return Response.Failure("Unable to store owner")
 		}
 
-		return Response.Failure("Unknown account")
+		return Response.Failure("Unknown owner")
 	}
 }

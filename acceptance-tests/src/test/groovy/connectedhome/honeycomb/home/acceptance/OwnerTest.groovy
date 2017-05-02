@@ -2,7 +2,7 @@ package connectedhome.honeycomb.home.acceptance
 
 import connectedhome.honeycomb.home.commands.AddPropertyEntitlement
 import connectedhome.honeycomb.home.commands.Command
-import connectedhome.honeycomb.home.commands.CreateAccount
+import connectedhome.honeycomb.home.commands.CreateOwner
 import connectedhome.honeycomb.home.commands.Response
 import connectedhome.honeycomb.home.queries.simple.Entitlement
 import connectedhome.honeycomb.home.queries.simple.Owner
@@ -16,7 +16,7 @@ class OwnerTest extends Specification {
 		def userId = "user-id"
 
 		when:
-		Response response = service.process(new CreateAccount(userId))
+		Response response = service.process(new CreateOwner(userId))
 		Owner owner = service.owner(userId)
 
 		then:
@@ -33,7 +33,7 @@ class OwnerTest extends Specification {
 
 		when:
 		List<Command> commands = [
-				new CreateAccount(userId),
+				new CreateOwner(userId),
 				new AddPropertyEntitlement(userId, "entitlement", 2, 9)
 		]
 

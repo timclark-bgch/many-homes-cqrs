@@ -6,6 +6,6 @@ import org.junit.jupiter.api.Test
 internal class CommandHandlerTest {
 	@Test
 	fun nonsense() {
-		assertTrue(CreateAccount("owner") is Command)
+		assertTrue(CreateOwner("owner") is Command)
 	}
 }
