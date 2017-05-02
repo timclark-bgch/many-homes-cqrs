@@ -5,7 +5,7 @@ import connectedhome.honeycomb.home.commands.Command
 import connectedhome.honeycomb.home.commands.CreateOwner
 import connectedhome.honeycomb.home.commands.Response
 import connectedhome.honeycomb.home.queries.simple.Entitlement
-import connectedhome.honeycomb.home.queries.simple.Owner
+import connectedhome.honeycomb.home.queries.simple.OwnerRecord
 import spock.lang.Specification
 
 class OwnerTest extends Specification {
@@ -17,7 +17,7 @@ class OwnerTest extends Specification {
 
 		when:
 		Response response = service.process(new CreateOwner(userId))
-		Owner owner = service.owner(userId)
+		OwnerRecord owner = service.owner(userId)
 
 		then:
 		response.success
@@ -38,7 +38,7 @@ class OwnerTest extends Specification {
 		]
 
 		List<Response> responses = commands.collect { service.process(it) }
-		Owner owner = service.owner(userId)
+		OwnerRecord owner = service.owner(userId)
 
 		then:
 		responses.every { it.success }

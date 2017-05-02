@@ -44,7 +44,7 @@ internal class OwnerTest {
 	}
 
 	@Test
-	fun entitlementCannotBeAddedIfAccountClosed()	{
+	fun entitlementCannotBeAddedIfOwnerClosed()	{
 		val owner = Owner(State(), listOf(Created("test"), Closed("test")))
 
 		val events = owner.addPropertyEntitlement("test", 2, 10)
@@ -53,7 +53,7 @@ internal class OwnerTest {
 	}
 
 	@Test
-	fun entitlementCannotBeAddedIfAccountSuspended()	{
+	fun entitlementCannotBeAddedIfOwnerSuspended()	{
 		val owner = Owner(State(), listOf(Created("test"), Suspended("test")))
 
 		val events = owner.addPropertyEntitlement("test", 2, 10)
@@ -85,7 +85,7 @@ internal class OwnerTest {
 	}
 
 	@Test
-	fun homeCannotBeAddedWhenAccountSuspended()	{
+	fun homeCannotBeAddedWhenOwnerSuspended()	{
 		val owner = Owner(State(),
 			listOf(Created("test"), PropertyEntitlementAdded("test", 2, 10), Suspended("test")))
 
@@ -95,7 +95,7 @@ internal class OwnerTest {
 	}
 
 	@Test
-	fun homeCannotBeAddedWhenAccountClosed()	{
+	fun homeCannotBeAddedWhenOwnerClosed()	{
 		val owner = Owner(State(),
 			listOf(Created("test"), PropertyEntitlementAdded("test", 2, 10), Closed("test")))
 

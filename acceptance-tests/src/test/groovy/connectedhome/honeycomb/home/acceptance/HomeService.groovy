@@ -3,14 +3,13 @@ package connectedhome.honeycomb.home.acceptance
 import connectedhome.honeycomb.home.commands.Command
 import connectedhome.honeycomb.home.commands.CommandHandler
 import connectedhome.honeycomb.home.commands.Response
-import connectedhome.honeycomb.home.queries.simple.Owner
+import connectedhome.honeycomb.home.queries.simple.OwnerRecord
 import connectedhome.honeycomb.home.queries.simple.OwnerView
 import connectedhome.honeycomb.home.storage.SimplePersistence
 import connectedhome.honeycomb.home.storage.owner.OwnerRepository
 import connectedhome.honeycomb.home.storage.owner.OwnerStore
 import honeycomb.home.events.EventHolder
 import honeycomb.home.events.Listener
-
 
 final class HomeService {
 	private final OwnerView ownerView = new OwnerView()
@@ -31,7 +30,7 @@ final class HomeService {
 		return commands.handle(command)
 	}
 
-	Owner owner(final String id) {
+	OwnerRecord owner(final String id) {
 		return ownerView.owner(id)
 	}
 }

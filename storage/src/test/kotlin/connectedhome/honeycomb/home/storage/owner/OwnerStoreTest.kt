@@ -32,7 +32,7 @@ internal class OwnerStoreTest {
 		val store = OwnerStore(TestPersistence(records))
 
 		val id = "123"
-		val owner = "owner"
+		val owner = id
 		val events = listOf(
 			Created(owner),
 			PropertyEntitlementAdded("entitlement", 2, 10),

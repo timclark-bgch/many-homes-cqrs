@@ -1,38 +1,37 @@
 syntax = "proto3";
 
-package honeycomb.home.events.account;
+package honeycomb.home.events.owner;
 
-option java_package = "honeycomb.home.events.account";
+option java_package = "honeycomb.home.events.owner";
 
 message Created {
-	string account = 1;
-	string owner = 2;
+	string owner = 1;
 }
 
 message Suspended {
-	string account = 1;
+	string owner = 1;
 	string reason = 2;
 }
 
 message Reactivated {
-	string account = 1;
+	string owner = 1;
 	string reason = 2;
 }
 
 message Closed {
-	string account = 1;
+	string owner = 1;
 	string reason = 2;
 }
 
 message PropertyEntitlementAdded {
-	string account = 1;
+	string owner = 1;
 	string label = 2;
 	int32 properties = 3;
 	int32 users = 4;
 }
 
 message PropertyAdded {
-	string account = 1;
+	string owner = 1;
 	string property = 2;
 }
 

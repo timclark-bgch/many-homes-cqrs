@@ -13,7 +13,7 @@ data class CreateOwner(val owner: String) : Command()
 data class SuspendOwner(val owner: String, val reason: String) : Command()
 data class AddPropertyEntitlement(val owner: String, val entitlement: String, val properties: Int, val users: Int) : Command()
 
-class CommandHandler(private val accounts: OwnerRepository) {
+class CommandHandler(private val owners: OwnerRepository) {
 	fun handle(command: Command): Response {
 		return when (command) {
 			is CreateOwner -> createAccount(command)
@@ -24,7 +24,7 @@ class CommandHandler(private val accounts: OwnerRepository) {
 	}
 
 	private fun createAccount(command: CreateOwner): Response {
-		if (accounts.store(command.owner, 1, listOf(Created(command.owner)))) {
+		if (owners.store(command.owner, 1, listOf(Created(command.owner)))) {
 			return Response.Success
 		}
 
@@ -32,9 +32,9 @@ class CommandHandler(private val accounts: OwnerRepository) {
 	}
 
 	private fun suspendAccount(command: SuspendOwner): Response {
-		val account = accounts.fetch(command.owner)
+		val account = owners.fetch(command.owner)
 		if (account != null) {
-			if (accounts.store(command.owner, 1, account.suspend(command.reason))) {
+			if (owners.store(command.owner, 1, account.suspend(command.reason))) {
 				return Response.Success
 			}
 
@@ -45,9 +45,9 @@ class CommandHandler(private val accounts: OwnerRepository) {
 	}
 
 	private fun addEntitlement(command: AddPropertyEntitlement): Response {
-		val account = accounts.fetch(command.owner)
+		val account = owners.fetch(command.owner)
 		if (account != null) {
-			if (accounts.store(command.owner, 1, account.addPropertyEntitlement(command.entitlement, command.properties, command.users))) {
+			if (owners.store(command.owner, 1, account.addPropertyEntitlement(command.entitlement, command.properties, command.users))) {
 				return Response.Success
 			}
 			return Response.Failure("Unable to store owner")
