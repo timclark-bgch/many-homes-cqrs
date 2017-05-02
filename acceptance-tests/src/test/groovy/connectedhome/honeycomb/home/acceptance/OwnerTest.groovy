@@ -13,15 +13,15 @@ class OwnerTest extends Specification {
 	def "An owner can be created and read"() {
 		given:
 		HomeService service = new HomeService()
-		def user = "owner"
+		def userId = "user-id"
 
 		when:
-		Response response = service.process(new CreateAccount(user))
-		Owner owner = service.owner(user)
+		Response response = service.process(new CreateAccount(userId))
+		Owner owner = service.owner(userId)
 
 		then:
 		response.success
-		owner.user == user
+		owner.user == userId
 		owner.entitlements.isEmpty()
 		owner.homes.isEmpty()
 	}
@@ -29,20 +29,20 @@ class OwnerTest extends Specification {
 	def "An owner can have entitlements"() {
 		given:
 		HomeService service = new HomeService()
-		def user = "owner"
+		def userId = "user-id"
 
 		when:
 		List<Command> commands = [
-				new CreateAccount(user),
-				new AddPropertyEntitlement(user, "entitlement", 2, 9)
+				new CreateAccount(userId),
+				new AddPropertyEntitlement(userId, "entitlement", 2, 9)
 		]
 
 		List<Response> responses = commands.collect { service.process(it) }
-		Owner owner = service.owner(user)
+		Owner owner = service.owner(userId)
 
 		then:
 		responses.every { it.success }
-		owner.user == user
+		owner.user == userId
 		owner.entitlements == [new Entitlement("entitlement", 2, 9)]
 		owner.homes.isEmpty()
 	}
