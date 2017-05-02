@@ -23,21 +23,6 @@ data class State(
 	val entitlements: List<HomeEntitlement> = emptyList(),
 	val properties: List<String> = emptyList())
 
-private fun State.updated(maxUsers: Int): List<HomeEntitlement> {
-	val entitlements = this.entitlements.toMutableList()
-
-	entitlements.add(HomeEntitlement(maxUsers))
-
-	return entitlements
-}
-
-private fun State.addProperty(home: String): List<String> {
-	val homes = this.properties.toMutableList()
-	homes.add(home)
-
-	return homes
-}
-
 private fun State.entitled(): Boolean =
 	this.entitlements.size > this.properties.size
 
@@ -47,8 +32,8 @@ class Account(state: State, events: List<Event>) : Aggregate<State, Event>(state
 		is Suspended -> state.copy(status = Status.Suspended())
 		is Reactivated -> state.copy(status = Status.Active())
 		is Closed -> state.copy(status = Status.Closed())
-		is PropertyEntitlementAdded -> state.copy(entitlements = state.updated(event.maxUsers))
-		is PropertyAdded -> state.copy(properties = state.addProperty(event.property))
+		is PropertyEntitlementAdded -> state.copy(entitlements = state.entitlements + HomeEntitlement(event.maxUsers))
+		is PropertyAdded -> state.copy(properties = state.properties + event.property)
 	}
 
 	fun suspend(reason: String): List<Event> =

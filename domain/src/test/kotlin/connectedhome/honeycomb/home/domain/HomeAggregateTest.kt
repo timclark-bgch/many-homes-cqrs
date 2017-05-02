@@ -18,6 +18,7 @@ internal class HomeAggregateTest {
 
 		assertTrue(aggregate.suspend("already-suspended").isEmpty())
 	}
+
 	@Test
 	fun canBeClosed() {
 		val aggregate = HomeAggregate(HomeState(), listOf(created))
