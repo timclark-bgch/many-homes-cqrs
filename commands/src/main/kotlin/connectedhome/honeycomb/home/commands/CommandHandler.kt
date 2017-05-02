@@ -1,6 +1,6 @@
 package connectedhome.honeycomb.home.commands
 
-import connectedhome.honeycomb.home.domain.account.Created
+import connectedhome.honeycomb.home.domain.owner.Created
 import connectedhome.honeycomb.home.storage.owner.OwnerRepository
 
 sealed class Response(val success: Boolean, val message: String?) {

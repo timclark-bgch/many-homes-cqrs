@@ -1,4 +1,4 @@
-package connectedhome.honeycomb.home.domain.account
+package connectedhome.honeycomb.home.domain.owner
 
 import connectedhome.honeycomb.home.domain.Aggregate
 
@@ -26,7 +26,7 @@ data class State(
 private fun State.entitled(): Boolean =
 	this.entitlements.size > this.properties.size
 
-class Account(state: State, events: List<Event>) : Aggregate<State, Event>(state, events) {
+class Owner(state: State, events: List<Event>) : Aggregate<State, Event>(state, events) {
 	override fun apply(event: Event): State = when (event) {
 		is Created -> state
 		is Suspended -> state.copy(status = Status.Suspended())

@@ -1,6 +1,6 @@
 package connectedhome.honeycomb.home.storage.owner
 
-import connectedhome.honeycomb.home.domain.account.*
+import connectedhome.honeycomb.home.domain.owner.*
 import connectedhome.honeycomb.home.storage.*
 import connectedhome.honeycomb.home.storage.protobuf.*
 import honeycomb.home.events.account.Account

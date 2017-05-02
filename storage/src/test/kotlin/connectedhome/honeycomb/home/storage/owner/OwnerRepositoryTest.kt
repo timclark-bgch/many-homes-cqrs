@@ -1,6 +1,6 @@
 package connectedhome.honeycomb.home.storage.owner
 
-import connectedhome.honeycomb.home.domain.account.Created
+import connectedhome.honeycomb.home.domain.owner.Created
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
