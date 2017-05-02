@@ -12,7 +12,7 @@ class OwnerView : Listener {
 	private val owners = mutableMapOf<String, OwnerRecord>()
 
 	override fun event(holder: EventHolder?) {
-		if (holder != null) {
+		if (holder != null && holder.data != null) {
 			when {
 				holder.descriptor == Owner.Created.getDescriptor().fullName -> accountCreated(holder.data)
 				holder.descriptor == Owner.PropertyEntitlementAdded.getDescriptor().fullName -> entitlementAdded(holder.data)
@@ -20,22 +20,18 @@ class OwnerView : Listener {
 		}
 	}
 
-	private fun entitlementAdded(data: ByteArray?) {
-		if (data != null) {
-			val entitlement = Owner.PropertyEntitlementAdded.parseFrom(data)
-			val owner = owners[entitlement.owner]
-			if (owner != null) {
-				owners[entitlement.owner] =
-					owner.copy(entitlements = owner.entitlements + Entitlement(entitlement.label, entitlement.properties, entitlement.users))
-			}
+	private fun entitlementAdded(data: ByteArray) {
+		val entitlement = Owner.PropertyEntitlementAdded.parseFrom(data)
+		val owner = owners[entitlement.owner]
+		if (owner != null) {
+			owners[entitlement.owner] =
+				owner.copy(entitlements = owner.entitlements + Entitlement(entitlement.label, entitlement.properties, entitlement.users))
 		}
 	}
 
-	private fun accountCreated(data: ByteArray?) {
-		if (data != null) {
-			val created = Owner.Created.parseFrom(data)
-			owners.putIfAbsent(created.owner, OwnerRecord(created.owner, emptyList(), emptyList()))
-		}
+	private fun accountCreated(data: ByteArray) {
+		val created = Owner.Created.parseFrom(data)
+		owners.putIfAbsent(created.owner, OwnerRecord(created.owner, emptyList(), emptyList()))
 	}
 
 	fun owner(id: String): OwnerRecord? = owners[id]
