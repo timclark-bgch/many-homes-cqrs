@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 
 internal class OwnerRepositoryTest {
 	@Test
-	fun fetchesAccountIfStored()	{
+	fun fetchesOwnerIfStored()	{
 		val store = OwnerStore(TestPersistence(mutableListOf()))
 		val repository = OwnerRepository(store)
 
@@ -16,7 +16,7 @@ internal class OwnerRepositoryTest {
 	}
 
 	@Test
-	fun accountNotFound()	{
+	fun ownerNotFound()	{
 		val store = OwnerStore(TestPersistence(mutableListOf()))
 		val repository = OwnerRepository(store)
 

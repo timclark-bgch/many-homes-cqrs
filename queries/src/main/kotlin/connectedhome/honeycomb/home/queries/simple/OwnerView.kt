@@ -14,7 +14,7 @@ class OwnerView : Listener {
 	override fun event(holder: EventHolder?) {
 		if (holder != null && holder.data != null) {
 			when {
-				holder.descriptor == Owner.Created.getDescriptor().fullName -> accountCreated(holder.data)
+				holder.descriptor == Owner.Created.getDescriptor().fullName -> ownerCreated(holder.data)
 				holder.descriptor == Owner.PropertyEntitlementAdded.getDescriptor().fullName -> entitlementAdded(holder.data)
 			}
 		}
@@ -29,7 +29,7 @@ class OwnerView : Listener {
 		}
 	}
 
-	private fun accountCreated(data: ByteArray) {
+	private fun ownerCreated(data: ByteArray) {
 		val created = Owner.Created.parseFrom(data)
 		owners.putIfAbsent(created.owner, OwnerRecord(created.owner, emptyList(), emptyList()))
 	}

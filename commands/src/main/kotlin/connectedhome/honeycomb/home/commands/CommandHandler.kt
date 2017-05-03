@@ -17,7 +17,7 @@ class CommandHandler(private val owners: OwnerRepository) {
 	fun handle(command: Command): Response {
 		return when (command) {
 			is CreateOwner -> createOwner(command)
-			is SuspendOwner -> suspendAccount(command)
+			is SuspendOwner -> suspendOwner(command)
 			is AddPropertyEntitlement -> addEntitlement(command)
 			else -> Response.Failure("Unknown command")
 		}
@@ -31,7 +31,7 @@ class CommandHandler(private val owners: OwnerRepository) {
 		return Response.Failure("Unable to create owner")
 	}
 
-	private fun suspendAccount(command: SuspendOwner): Response {
+	private fun suspendOwner(command: SuspendOwner): Response {
 		val owner = owners.fetch(command.owner)
 		if (owner != null) {
 			if (owners.store(command.owner, 1, owner.suspend(command.reason))) {
