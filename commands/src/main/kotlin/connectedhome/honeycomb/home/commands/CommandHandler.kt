@@ -34,7 +34,7 @@ class CommandHandler(private val owners: OwnerRepository) {
 	private fun suspendOwner(command: SuspendOwner): Response {
 		val owner = owners.fetch(command.owner)
 		if (owner != null) {
-			if (owners.store(command.owner, 1, owner.suspend(command.reason))) {
+			if (owners.store(command.owner, owner.version, owner.value.suspend(command.reason))) {
 				return Response.Success
 			}
 
@@ -47,7 +47,7 @@ class CommandHandler(private val owners: OwnerRepository) {
 	private fun addEntitlement(command: AddPropertyEntitlement): Response {
 		val owner = owners.fetch(command.owner)
 		if (owner != null) {
-			if (owners.store(command.owner, 1, owner.addPropertyEntitlement(command.entitlement, command.properties, command.users))) {
+			if (owners.store(command.owner, owner.version, owner.value.addPropertyEntitlement(command.entitlement, command.properties, command.users))) {
 				return Response.Success
 			}
 			return Response.Failure("Unable to store owner")

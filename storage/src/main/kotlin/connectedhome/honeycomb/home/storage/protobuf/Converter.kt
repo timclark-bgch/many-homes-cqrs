@@ -6,7 +6,7 @@ import connectedhome.honeycomb.home.storage.Record
 
 interface Converter<T> {
 	fun read(bytes: ByteArray): T?
-	fun write(event: T, id: String): Record
+	fun write(event: T, version: Int, id: String): Record
 	fun proto(): String
 }
 

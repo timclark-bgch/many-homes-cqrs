@@ -10,7 +10,7 @@ internal class OwnerRepositoryTest {
 		val store = OwnerStore(TestPersistence(mutableListOf()))
 		val repository = OwnerRepository(store)
 
-		assertTrue(store.write("123", listOf(Created("owner"))))
+		assertTrue(store.write("123", 1, listOf(Created("owner"))))
 
 		assertNotNull(repository.fetch("123"))
 	}
@@ -20,7 +20,7 @@ internal class OwnerRepositoryTest {
 		val store = OwnerStore(TestPersistence(mutableListOf()))
 		val repository = OwnerRepository(store)
 
-		assertTrue(store.write("123", listOf(Created("owner"))))
+		assertTrue(store.write("123", 1, listOf(Created("owner"))))
 
 		assertNull(repository.fetch("Unknown"))
 	}

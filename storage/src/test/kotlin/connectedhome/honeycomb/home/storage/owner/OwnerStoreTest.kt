@@ -3,6 +3,7 @@ package connectedhome.honeycomb.home.storage.owner
 import connectedhome.honeycomb.home.domain.owner.*
 import connectedhome.honeycomb.home.storage.Persistence
 import connectedhome.honeycomb.home.storage.Record
+import connectedhome.honeycomb.home.storage.Records
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -22,7 +23,7 @@ internal class OwnerStoreTest {
 			Closed("closed")
 		)
 
-		assertTrue(store.write("123", events))
+		assertTrue(store.write("123", 1, events))
 		assertEquals(events.size, records.size)
 	}
 
@@ -42,9 +43,9 @@ internal class OwnerStoreTest {
 			Closed("closed")
 		)
 
-		assertTrue(store.write(id, events))
+		assertTrue(store.write(id, 1, events))
 
-		val stored = store.read(id)
+		val stored = store.read(id).value
 		assertEquals(6, stored.size)
 
 		checkCreated(stored[0], owner)
@@ -108,6 +109,8 @@ internal class OwnerStoreTest {
 internal class TestPersistence(val records: MutableList<Record>) : Persistence {
 	override fun write(records: List<Record>): Boolean = this.records.addAll(records)
 
-	override fun read(id: String): List<Record> = records.filter { r -> r.key.id == id }
-
+	override fun read(id: String): Records {
+		val records = records.filter { r -> r.key.id == id }
+		return Records(records.size, records)
+	}
 }
