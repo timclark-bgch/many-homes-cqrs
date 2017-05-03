@@ -16,14 +16,14 @@ data class AddPropertyEntitlement(val owner: String, val entitlement: String, va
 class CommandHandler(private val owners: OwnerRepository) {
 	fun handle(command: Command): Response {
 		return when (command) {
-			is CreateOwner -> createAccount(command)
+			is CreateOwner -> createOwner(command)
 			is SuspendOwner -> suspendAccount(command)
 			is AddPropertyEntitlement -> addEntitlement(command)
 			else -> Response.Failure("Unknown command")
 		}
 	}
 
-	private fun createAccount(command: CreateOwner): Response {
+	private fun createOwner(command: CreateOwner): Response {
 		if (owners.store(command.owner, 1, listOf(Created(command.owner)))) {
 			return Response.Success
 		}
@@ -32,9 +32,9 @@ class CommandHandler(private val owners: OwnerRepository) {
 	}
 
 	private fun suspendAccount(command: SuspendOwner): Response {
-		val account = owners.fetch(command.owner)
-		if (account != null) {
-			if (owners.store(command.owner, 1, account.suspend(command.reason))) {
+		val owner = owners.fetch(command.owner)
+		if (owner != null) {
+			if (owners.store(command.owner, 1, owner.suspend(command.reason))) {
 				return Response.Success
 			}
 
@@ -45,9 +45,9 @@ class CommandHandler(private val owners: OwnerRepository) {
 	}
 
 	private fun addEntitlement(command: AddPropertyEntitlement): Response {
-		val account = owners.fetch(command.owner)
-		if (account != null) {
-			if (owners.store(command.owner, 1, account.addPropertyEntitlement(command.entitlement, command.properties, command.users))) {
+		val owner = owners.fetch(command.owner)
+		if (owner != null) {
+			if (owners.store(command.owner, 1, owner.addPropertyEntitlement(command.entitlement, command.properties, command.users))) {
 				return Response.Success
 			}
 			return Response.Failure("Unable to store owner")
