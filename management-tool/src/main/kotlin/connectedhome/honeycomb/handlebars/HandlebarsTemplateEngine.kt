@@ -5,7 +5,7 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader
 import spark.ModelAndView
 import spark.TemplateEngine
 
-class HandlebarsTemplateEngine() : TemplateEngine() {
+class HandlebarsTemplateEngine : TemplateEngine() {
 	private val loader = ClassPathTemplateLoader("/templates")
 	private val handlebars = Handlebars(loader)
 
