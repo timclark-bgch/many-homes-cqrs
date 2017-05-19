@@ -1,6 +1,8 @@
 package connectedhome.honeycomb.home.commands
 
 import connectedhome.honeycomb.home.domain.owner.Created
+import connectedhome.honeycomb.home.domain.owner.Event
+import connectedhome.honeycomb.home.domain.owner.Owner
 import connectedhome.honeycomb.home.storage.owner.OwnerRepository
 
 sealed class Response(val success: Boolean, val message: String?) {
@@ -31,28 +33,23 @@ class CommandHandler(private val owners: OwnerRepository) {
 		return Response.Failure("Unable to create owner")
 	}
 
-	private fun suspendOwner(command: SuspendOwner): Response {
-		val owner = owners.fetch(command.owner)
-		if (owner != null) {
-			if (owners.store(command.owner, owner.version, owner.value.suspend(command.reason))) {
-				return Response.Success
-			}
-
-			return Response.Failure("Unable to store owner")
+	private fun suspendOwner(command: SuspendOwner): Response =
+		withOwner(command.owner) { owner ->
+			owner.suspend(command.reason)
 		}
 
-		return Response.Failure("Unknown owner")
-	}
-
-	private fun addEntitlement(command: AddPropertyEntitlement): Response {
-		val owner = owners.fetch(command.owner)
-		if (owner != null) {
-			if (owners.store(command.owner, owner.version, owner.value.addPropertyEntitlement(command.entitlement, command.properties, command.users))) {
-				return Response.Success
-			}
-			return Response.Failure("Unable to store owner")
+	private fun addEntitlement(command: AddPropertyEntitlement): Response =
+		withOwner(command.owner) { owner ->
+			owner.addPropertyEntitlement(command.entitlement, command.properties, command.users)
 		}
 
-		return Response.Failure("Unknown owner")
+	private fun withOwner(ownerId: String, body: (owner: Owner) -> List<Event>): Response {
+		val owner = owners.fetch(ownerId) ?: return Response.Failure("Owner $ownerId not found")
+
+		if (owners.store(ownerId, owner.version, body(owner.value))) {
+			return Response.Success
+		}
+
+		return Response.Failure("Unable to store $ownerId")
 	}
 }
